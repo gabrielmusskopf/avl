@@ -121,6 +121,7 @@ func doOr(n *avl.TreeNode, fail, sucess string) {
 }
 
 func main() {
+	avl.TreeEvents = &avl.Queue[string]{}
 	fmt.Printf("Árvore AVL\n")
 
 	opt := -1
@@ -150,8 +151,8 @@ func main() {
 			if avl.Tree == nil {
 				avl.Tree = avl.FromArray(ds)
 			} else {
-                avl.Tree = avl.Tree.AddFromArray(ds)
-            }
+				avl.Tree = avl.Tree.AddFromArray(ds)
+			}
 			doOr(avl.Tree, "Não pôde criar árvore", "Ok!")
 
 		case BUSCAR_VALOR:
@@ -176,7 +177,10 @@ func main() {
 			avl.Tree.BFS()
 
 		case INICIAR_HTTP:
-			go http.InitHttp()
+			if err := http.InitHttp(); err != nil {
+				fmt.Print(err.Error())
+				break
+			}
 			fmt.Printf("Servidor iniciado em http://127.0.0.1:3333")
 
 		case SAIR:

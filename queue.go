@@ -2,16 +2,16 @@ package avl
 
 import "log"
 
-type Queue struct {
-	values []*TreeNode
+type Queue[T any] struct {
+	values []T
 }
 
-func (q *Queue) enqueue(v... *TreeNode) {
+func (q *Queue[T]) Enqueue(v ...T) {
 	q.values = append(q.values, v...)
 }
 
-func (q *Queue) dequeue() *TreeNode {
-	if q.isEmpty() {
+func (q *Queue[T]) Dequeue() T {
+	if q.IsEmpty() {
 		log.Fatal("nada para remover da fila!")
 	}
 	v := q.values[0]
@@ -19,7 +19,12 @@ func (q *Queue) dequeue() *TreeNode {
 	return v
 }
 
-func (q *Queue) isEmpty() bool {
+func (q *Queue[T]) IsEmpty() bool {
 	return len(q.values) == 0
 }
 
+func (q *Queue[T]) Walk(each func(T)) {
+	for _, v := range q.values {
+		each(v)
+	}
+}

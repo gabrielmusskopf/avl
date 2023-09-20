@@ -12,29 +12,39 @@
             <section>
                 <h1>Árvore AVL</h1>
                 <div class="tree">
-                    {{.}}
+                    {{ .Tree }}
                 </div>
             </section>
             <section>
-                <h1>Controle</h1>
                 <div class="control">
-                    <form action="http://localhost:3333/api/avl/delete" method="GET">
-                        <div>
-                            <label for="node">Remover nó:</label>
-                            <input name="node" id="node" value="" />
-                        </div>
-                    </form>
-                    <form action="http://localhost:3333/api/avl/add" method="GET">
-                        <div>
-                            <label for="node">Adicionar nó:</label>
-                            <input name="node" id="node" value="" />
-                        </div>
-                    </form>
-                    <form action="http://localhost:3333/api/avl/clear" method="POST">
-                        <div>
-                            <button>Limpar</button>
-                        </div>
-                    </form>
+                    <h1>Controle</h1>
+                    <div class="control-form">
+                        <form action="/api/avl/delete" method="GET">
+                            <div>
+                                <label for="node">Remover nó:</label>
+                                <input name="node" id="node" value="" />
+                            </div>
+                        </form>
+                        <form action="/api/avl/add" method="GET">
+                            <div>
+                                <label for="node">Adicionar nó:</label>
+                                <input name="node" id="node" value="" />
+                            </div>
+                        </form>
+                        <form action="/api/avl/clear" method="POST">
+                            <div>
+                                <button>Limpar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="events">
+                    <h1>Eventos</h1>
+                    <div class="events-messages">
+                        {{ range .Events }} 
+                        <p>{{ . }}</p>
+                        {{- end -}}
+                    </div>
                 </div>
             </section>
         </main>

@@ -73,16 +73,16 @@ func (n *TreeNode) BFS() {
 		return
 	}
 	fmt.Printf("%d ", n.Value)
-	q := Queue{}
-	q.enqueue(n.Left, n.Right)
+	q := Queue[*TreeNode]{}
+	q.Enqueue(n.Left, n.Right)
 
-	for !q.isEmpty() {
-		x := q.dequeue()
+	for !q.IsEmpty() {
+		x := q.Dequeue()
 		if x == nil {
 			continue
 		}
 		fmt.Printf("%d ", x.Value)
-		q.enqueue(x.Left, x.Right)
+		q.Enqueue(x.Left, x.Right)
 	}
 }
 
@@ -149,27 +149,35 @@ func (n *TreeNode) balance() *TreeNode {
 	//simples
 	//rotação simples direita
 	if n.BF >= 2 && n.Left.BF >= 0 {
-		Debug("Nó %d com FB: %d. Rotação simples a direita\n", n.Value, n.BF)
+		s := fmt.Sprintf("Nó %d com FB: %d. Rotação simples a direita\n", n.Value, n.BF)
+		TreeEvents.Enqueue(s)
+		Debug(s)
 		return n.rotateRight()
 	}
 
 	//rotação simples esquerda
 	if n.BF <= -2 && n.Right.BF <= 0 {
-		Debug("Nó %d com FB: %d. Rotação simples a esquerda\n", n.Value, n.BF)
+		s := fmt.Sprintf("Nó %d com FB: %d. Rotação simples a esquerda\n", n.Value, n.BF)
+		TreeEvents.Enqueue(s)
+		Debug(s)
 		return n.rotateLeft()
 	}
 
 	//duplas
 	//rotação dupla direita
 	if n.BF >= 2 && n.Left.BF < 0 {
-		Debug("Nó %d com FB: %d. Rotação dupla a direita\n", n.Value, n.BF)
+		s := fmt.Sprintf("Nó %d com FB: %d. Rotação dupla a direita\n", n.Value, n.BF)
+		TreeEvents.Enqueue(s)
+		Debug(s)
 		n.Left = n.Left.rotateLeft()
 		return n.rotateRight()
 	}
 
 	//rotação dupla esquerda
 	if n.BF <= -2 && n.Right.BF > 0 {
-		Debug("Nó %d com FB: %d. Rotação dupla a esquerda\n", n.Value, n.BF)
+		s := fmt.Sprintf("Nó %d com FB: %d. Rotação dupla a esquerda\n", n.Value, n.BF)
+		TreeEvents.Enqueue(s)
+		Debug(s)
 		n.Right = n.Right.rotateRight()
 		return n.rotateLeft()
 	}
@@ -194,9 +202,14 @@ func (n *TreeNode) addRec(v int, i *int) *TreeNode {
 }
 
 func (n *TreeNode) Add(v int) *TreeNode {
+    if n.Serach(v) != nil {
+        return n
+	}
 	i := 0
 	t := n.addRec(v, &i)
-	Debug("%d interações para inserir %d\n", i, v)
+	s := fmt.Sprintf("%d interações para inserir %d\n", i, v)
+	TreeEvents.Enqueue(s)
+	Debug(s)
 	return t
 }
 
@@ -214,7 +227,9 @@ func (n *TreeNode) serachRec(v int, i *int) *TreeNode {
 func (n *TreeNode) Serach(v int) *TreeNode {
 	i := 0
 	t := n.serachRec(v, &i)
-	Debug("%d interações para buscar %d\n", i, v)
+	s := fmt.Sprintf("%d interações para buscar %d\n", i, v)
+	TreeEvents.Enqueue(s)
+	Debug(s)
 	return t
 }
 
@@ -271,7 +286,9 @@ func (n *TreeNode) removeRec(v int, i *int) *TreeNode {
 func (n *TreeNode) Remove(v int) *TreeNode {
 	i := 0
 	t := n.removeRec(v, &i)
-	Debug("%d interações para remover %d\n", i, v)
+	s := fmt.Sprintf("%d interações para remover %d\n", i, v)
+	TreeEvents.Enqueue(s)
+	Debug(s)
 	return t
 }
 
