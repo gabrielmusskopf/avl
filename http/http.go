@@ -10,7 +10,7 @@ import (
 var port string
 var routes *Routes
 
-func InitHttp() error {
+func InitHttp(block bool) error {
 	port = "3333"
 	conn, _ := net.DialTimeout("tcp", net.JoinHostPort("", port), time.Millisecond*100)
 	if conn != nil {
@@ -26,8 +26,12 @@ func InitHttp() error {
 	http.HandleFunc("/api/avl/clear", routes.handleClear)
 	http.HandleFunc("/", routes.handleTree)
 
-	go func() {
-        _ = http.ListenAndServe(fmt.Sprintf(":%s", port), nil)
-    }()
-    return nil
+	if block {
+		_ = http.ListenAndServe(fmt.Sprintf(":%s", port), nil)
+	} else {
+		go func() {
+			_ = http.ListenAndServe(fmt.Sprintf(":%s", port), nil)
+		}()
+	}
+	return nil
 }

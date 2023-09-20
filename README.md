@@ -14,6 +14,11 @@ Build e start
 make start
 ```
 
+ou, usar imagem do Dockerhub
+```shell
+ docker pull gabrielmusskopf/avl:latest
+ docker run -p 3333:3333 -it gabrielmusskopf/avl:latest
+```
 
 O projeto é orientado a linha de comando, tendo as funcionalidades de:
 - Ver árvore
@@ -35,3 +40,12 @@ Além da intereção via linha de comando, é possível iniciar um servidor HTTP
 ![avl no navegador](docs/web.png)
 
 
+Caso queira somente o servidor HTTP, é possível com
+```shell
+make start-http
+```
+
+ou, com Docker
+```
+docker run -p 3333:3333 -it gabrielmusskopf/avl:latest -http
+```
