@@ -1,16 +1,43 @@
-
 <!DOCTYPE html>
 <html>
+
+<head>
+    <meta charset="UTF-8" />
+    <link href="/styles/tree.css" type="text/css" rel="stylesheet">
+
     <head>
-        <meta charset="UTF-8" />
-        <link href="/styles/tree.css" type="text/css" rel="stylesheet">
-        <head>
-            <body>
-                <main>
-                    <h1>Árvore AVL</h1>
-                    <div class="tree">
-                        {{.}}
-                    </div>
-                </main>
-            </body>
+
+    <body>
+        <main>
+            <section>
+                <h1>Árvore AVL</h1>
+                <div class="tree">
+                    {{.}}
+                </div>
+            </section>
+            <section>
+                <h1>Controle</h1>
+                <div class="control">
+                    <form action="http://localhost:3333/api/avl/delete" method="GET">
+                        <div>
+                            <label for="node">Remover nó:</label>
+                            <input name="node" id="node" value="" />
+                        </div>
+                    </form>
+                    <form action="http://localhost:3333/api/avl/add" method="GET">
+                        <div>
+                            <label for="node">Adicionar nó:</label>
+                            <input name="node" id="node" value="" />
+                        </div>
+                    </form>
+                    <form action="http://localhost:3333/api/avl/clear" method="POST">
+                        <div>
+                            <button>Limpar</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </main>
+    </body>
+
 </html>

@@ -11,15 +11,15 @@ const (
 var LogLevel string
 
 func IsDebug() bool {
-    return LogLevel == DEBUG
+	return LogLevel == DEBUG
 }
 
 func ToggleDebug() {
-    if LogLevel == DEBUG {
-        LogLevel = NONE
-    } else {
-        LogLevel = DEBUG
-    }
+	if LogLevel == DEBUG {
+		LogLevel = NONE
+	} else {
+		LogLevel = DEBUG
+	}
 }
 
 func Info(s string, v ...any) {
@@ -34,4 +34,9 @@ func Debug(s string, v ...any) {
 		str := fmt.Sprintf("[debug] %s", s)
 		fmt.Printf(str, v...)
 	}
+}
+
+func Error(s string, v ...any) {
+	str := fmt.Sprintf("[error] %s", s)
+	fmt.Printf(str, v...)
 }
