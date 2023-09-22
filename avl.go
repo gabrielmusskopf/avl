@@ -1,6 +1,9 @@
 package avl
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 func max(a, b int) int {
 	if a > b {
@@ -202,12 +205,14 @@ func (n *TreeNode) addRec(v int, i *int) *TreeNode {
 }
 
 func (n *TreeNode) Add(v int) *TreeNode {
-    if n.Serach(v) != nil {
-        return n
+	if n.Serach(v) != nil {
+		return n
 	}
-	i := 0
-	t := n.addRec(v, &i)
-	s := fmt.Sprintf("%d interações para inserir %d\n", i, v)
+    var t *TreeNode
+    iter, elasped := measure(func(i *int) {
+        t = n.addRec(v, i)
+    })
+	s := fmt.Sprintf("%d interações para inserir %d %dns\n", iter, v, elasped)
 	TreeEvents.Enqueue(s)
 	Debug(s)
 	return t
@@ -225,9 +230,11 @@ func (n *TreeNode) serachRec(v int, i *int) *TreeNode {
 }
 
 func (n *TreeNode) Serach(v int) *TreeNode {
-	i := 0
-	t := n.serachRec(v, &i)
-	s := fmt.Sprintf("%d interações para buscar %d\n", i, v)
+    var t *TreeNode
+    iter, elapsed := measure(func(i *int) {
+        t = n.serachRec(v, i)
+    })
+	s := fmt.Sprintf("%d interações para buscar %d %dns\n", iter, v, elapsed)
 	TreeEvents.Enqueue(s)
 	Debug(s)
 	return t
@@ -284,12 +291,22 @@ func (n *TreeNode) removeRec(v int, i *int) *TreeNode {
 }
 
 func (n *TreeNode) Remove(v int) *TreeNode {
-	i := 0
-	t := n.removeRec(v, &i)
-	s := fmt.Sprintf("%d interações para remover %d\n", i, v)
+	var t *TreeNode
+    iter, elasped := measure(func(iter *int){
+		t = n.removeRec(v, iter)
+	})
+	s := fmt.Sprintf("%d interações para remover %d %dns\n", iter, v, elasped)
 	TreeEvents.Enqueue(s)
 	Debug(s)
+
 	return t
+}
+
+func measure(f func(*int)) (int, time.Duration){
+    iter := 0
+	start := time.Now()
+	f(&iter)
+    return iter, time.Since(start)
 }
 
 /*
