@@ -110,5 +110,6 @@ func (ro *Routes) handleAdd(w http.ResponseWriter, r *http.Request) {
 
 func (ro *Routes) handleClear(w http.ResponseWriter, r *http.Request) {
 	avl.Tree = nil
+	avl.TreeEvents = &avl.Queue[string]{}
 	ro.handleTree(w, r)
 }
