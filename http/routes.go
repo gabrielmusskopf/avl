@@ -8,7 +8,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/gabrielmusskopf/avl"
+	avl "github.com/gabrielmusskopf/avl/pkg"
 )
 
 type Routes struct {

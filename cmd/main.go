@@ -4,8 +4,8 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/gabrielmusskopf/avl"
 	"github.com/gabrielmusskopf/avl/http"
+	avl "github.com/gabrielmusskopf/avl/pkg"
 )
 
 func main() {

@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gabrielmusskopf/avl"
 	"github.com/gabrielmusskopf/avl/http"
+	avl "github.com/gabrielmusskopf/avl/pkg"
 )
 
 const (

@@ -2,15 +2,8 @@ package avl
 
 import (
 	"fmt"
-	"time"
 )
 
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
 
 type TreeNode struct {
 	Value int
@@ -40,7 +33,7 @@ func (n *TreeNode) AddFromArray(arr []int) *TreeNode {
 	return n
 }
 
-func create(v int) *TreeNode {
+func newTree(v int) *TreeNode {
 	return &TreeNode{
 		Value: v,
 		BF:    0,
@@ -191,7 +184,7 @@ func (n *TreeNode) balance() *TreeNode {
 func (n *TreeNode) addRec(v int, i *int) *TreeNode {
 	*i++
 	if n == nil {
-		return create(v)
+		return newTree(v)
 	}
 	if v < n.Value {
 		Debug("%d é menor do que %d\n", v, n.Value)
@@ -300,13 +293,6 @@ func (n *TreeNode) Remove(v int) *TreeNode {
 	Debug(s)
 
 	return t
-}
-
-func measure(f func(*int)) (int, time.Duration){
-    iter := 0
-	start := time.Now()
-	f(&iter)
-    return iter, time.Since(start)
 }
 
 /*
