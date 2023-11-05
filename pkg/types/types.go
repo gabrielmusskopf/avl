@@ -28,6 +28,22 @@ func NewPerson(cpf, rg, name, birthDate, birthCity string) *Person {
 
 //TODO: Some way to allow use cmp.Ordered types (like string) without force a wrapper type
 //creation just to implement Ordered[T any]
+
+type Int int
+
+func (i Int) Compare(other Int) int {
+	if int(i) < int(other) {
+		return -1
+	} else if int(i) > int(other) {
+		return 1
+	}
+	return 0
+}
+
+func (i Int) Less(other Int) bool {
+	return i.Compare(other) == -1
+}
+
 type String string
 
 func (s String) CompareWithLength(other String) int {

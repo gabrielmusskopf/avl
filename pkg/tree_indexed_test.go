@@ -8,23 +8,9 @@ import (
 	"github.com/gabrielmusskopf/avl/pkg/types"
 )
 
-type Int int
-
-func (i Int) Compare(other Int) int {
-	if int(i) < int(other) {
-		return -1
-	} else if int(i) > int(other) {
-		return 1
-	}
-	return 0
-}
-
-func (i Int) Less(other Int) bool {
-	return i.Compare(other) == -1
-}
 
 func TestIndexedTreeCreation(t *testing.T) {
-	tree := newIndexedTree(Int(1), "first")
+	tree := newIndexedTree(types.Int(1), "first")
 
 	if tree == nil {
 		t.Errorf("%v should not be nil", t)
@@ -32,15 +18,15 @@ func TestIndexedTreeCreation(t *testing.T) {
 }
 
 func TestIndexedTreeInsertion(t *testing.T) {
-	tree := newIndexedTree(Int(10), "first")
-	tree = tree.Add(Int(5), "second")
-	tree = tree.Add(Int(15), "thirth")
+	tree := newIndexedTree(types.Int(10), "first")
+	tree = tree.Add(types.Int(5), "second")
+	tree = tree.Add(types.Int(15), "thirth")
 
 	if tree == nil {
 		t.Errorf("%v should not be nil", t)
 	}
 
-	first := tree.Search(Int(10))
+	first := tree.Search(types.Int(10))
 	if first == nil {
 		t.Errorf("expected not nil, but recieved %v", first)
 	}
@@ -48,7 +34,7 @@ func TestIndexedTreeInsertion(t *testing.T) {
 		t.Errorf("expected '%s', but recieved %s", "first", first.Value)
 	}
 
-	second := tree.Search(Int(5))
+	second := tree.Search(types.Int(5))
 	if second == nil {
 		t.Errorf("expected not nil, but recieved %v", second)
 	}
@@ -56,7 +42,7 @@ func TestIndexedTreeInsertion(t *testing.T) {
 		t.Errorf("expected '%s', but recieved %s", "second", second.Value)
 	}
 
-	thirth := tree.Search(Int(15))
+	thirth := tree.Search(types.Int(15))
 	if thirth == nil {
 		t.Errorf("expected not nil, but recieved %v", thirth)
 	}
@@ -66,17 +52,17 @@ func TestIndexedTreeInsertion(t *testing.T) {
 }
 
 func TestIndexedTreeSearch(t *testing.T) {
-	tree := newIndexedTree(Int(10), "first")
-	tree = tree.Add(Int(5), "second")
-	tree = tree.Add(Int(15), "thirth")
+	tree := newIndexedTree(types.Int(10), "first")
+	tree = tree.Add(types.Int(5), "second")
+	tree = tree.Add(types.Int(15), "thirth")
 
 	if tree == nil {
 		t.Errorf("%v should not be nil", t)
 	}
 
-	nodesMatched := tree.SearchAllBy(Int(10),
-		func(k1, k2 Int) bool { return k1 == k2 },
-		func(k1, k2 Int) int { return k1.Compare(k2) })
+	nodesMatched := tree.SearchAllBy(types.Int(10),
+		func(k1, k2 types.Int) bool { return k1 == k2 },
+		func(k1, k2 types.Int) int { return k1.Compare(k2) })
 
 	if len(nodesMatched) != 1 {
 		t.Errorf("expected length 1 but recieved %d", len(nodesMatched))

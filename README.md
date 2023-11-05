@@ -56,3 +56,14 @@ uma chave (index) e um valor.
 
 O valor é uma referência para o tipo de informação que a árvore deve indexar, como referência para um inteiro, string, struct, etc. A chave é um tipo
 personalizado que deve implementar os métodos definidos na interface `Ordered[T any]` de comparação para as operações na árvore
+
+## Testes e TODO
+Para executar os testes unitários existentes, basta executar
+```shell
+make tests
+```
+
+Para visualizar todas as pendências, basta executar
+```shell
+make todo
+```
