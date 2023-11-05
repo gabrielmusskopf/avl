@@ -8,13 +8,15 @@ build:
 run: 
 	./bin/main
 
-run-http: 
+tests:
+	@go test ./pkg
+	@go test ./pkg/types
+
+todo:
+	@grep -rn --exclude "Makefile" TODO | grep -oP '//\K.*'
+
+http: 
 	./bin/main -http
 
 start: build
 	./bin/main
-
-start-http: 
-	mkdir -p ./bin
-	go build -o ./bin/main ./cmd/*.go 
-	./bin/main -http
