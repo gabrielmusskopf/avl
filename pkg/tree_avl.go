@@ -4,8 +4,8 @@ import (
 	"fmt"
 )
 
-
 type TreeNode struct {
+    //TODO: Change to generic
 	Value int
 	BF    int
 	Left  *TreeNode

@@ -49,3 +49,10 @@ ou, com Docker
 ```
 docker run -p 3333:3333 -it gabrielmusskopf/avl:latest -http
 ```
+
+## AVL indexada
+A aplicação conta com uma árvore AVL indexada para criar índices para buscas com a complexidade temporal de uma árvore binária de busca. A árvore `IndexedTree` é constituída de 
+uma chave (index) e um valor. 
+
+O valor é uma referência para o tipo de informação que a árvore deve indexar, como referência para um inteiro, string, struct, etc. A chave é um tipo
+personalizado que deve implementar os métodos definidos na interface `Ordered[T any]` de comparação para as operações na árvore

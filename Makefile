@@ -9,8 +9,8 @@ run:
 	./bin/main
 
 tests:
-	@go test ./pkg
-	@go test ./pkg/types
+	@go test -v ./pkg
+	@go test -v ./pkg/types
 
 todo:
 	@grep -rn --exclude "Makefile" TODO | grep -oP '//\K.*'
