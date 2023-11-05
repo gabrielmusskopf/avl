@@ -1,5 +1,5 @@
 dev:
-	go run ./cmd/main.go
+	go run ./cmd/main.go ./cmd/cmd.go
 
 build: 
 	mkdir -p ./bin

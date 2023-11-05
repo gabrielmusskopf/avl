@@ -187,6 +187,5 @@ func cmdLoop() {
 			fmt.Print("Não conheço essa...")
 		}
 		fmt.Println()
-        opt = -1
 	}
 }
