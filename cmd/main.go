@@ -6,10 +6,15 @@ import (
 
 	"github.com/gabrielmusskopf/avl/http"
 	avl "github.com/gabrielmusskopf/avl/pkg"
+	"github.com/gabrielmusskopf/avl/pkg/data"
 )
 
 func main() {
 	avl.TreeEvents = &avl.Queue[string]{}
+    reader := &data.CsvPersonReader{}
+    people := reader.Read("pkg/data/data.test.csv")
+    index := avl.BuildIndexes(people)
+
 
 	justHttp := flag.Bool("http", false, "just serve http, no command line")
 	flag.Parse()
@@ -24,5 +29,5 @@ func main() {
 	}
 
 	fmt.Printf("Árvore AVL\n")
-	cmdLoop()
+	cmdLoop(index)
 }
