@@ -9,12 +9,18 @@ import (
 	"github.com/gabrielmusskopf/avl/pkg/data"
 )
 
+const N_DATA int = 1000
+
 func main() {
 	avl.TreeEvents = &avl.Queue[string]{}
-    reader := &data.CsvPersonReader{}
-    people := reader.Read("pkg/data/data.test.csv")
-    index := avl.BuildIndexes(people)
-
+	reader := &data.CsvPersonReader{}
+	if !data.HasData() {
+        fmt.Println("Gerando dados...")
+		data.Generate(N_DATA)
+        fmt.Println("Dado gerados!")
+	}
+	people := reader.Read(data.DataPath)
+	index := avl.BuildIndexes(people)
 
 	justHttp := flag.Bool("http", false, "just serve http, no command line")
 	flag.Parse()

@@ -11,6 +11,7 @@ import (
 
 	"github.com/gabrielmusskopf/avl/http"
 	avl "github.com/gabrielmusskopf/avl/pkg"
+	"github.com/gabrielmusskopf/avl/pkg/data"
 	"github.com/gabrielmusskopf/avl/pkg/types"
 )
 
@@ -26,12 +27,13 @@ const (
 	VER_IN_ORDER
 	VER_BFS
 	INICIAR_HTTP
-	SEE_NAME_TREE
-	SEE_CPF_TREE
-	SEE_BIRTH_DATE_TREE
-	SEARCH_NAME
-	SEARCH_CPF
-	SEARCH_BIRTH_DATE
+	VER_ARVORE_NOMES
+	VER_ARVORE_CPF
+	VER_ARVORE_ANIVERSARIO
+	BUSCAR_NOME
+	BUSCAR_CPF
+	BUSCAR_ANIVERSARIO
+	GERAR_DADOS
 	SAIR
 )
 
@@ -40,24 +42,25 @@ var opcoes map[int]string
 
 func init() {
 	opcoes = map[int]string{
-		SAIR:                "Sair",
-		HABILITAR_DEBUG:     "Habiltar debug",
-		VER_ARVORE:          "Ver árvore",
-		INSERIR_VALOR:       "Inserir valor",
-		INSERIR_VALORES:     "Inserir valores",
-		VER_POST_ORDER:      "DFS Post order",
-		VER_IN_ORDER:        "DFS In order",
-		VER_PRE_ORDER:       "DFS Pre order",
-		VER_BFS:             "BFS",
-		BUSCAR_VALOR:        "Buscar valor",
-		REMOVER_VALOR:       "Remover valor",
-		INICIAR_HTTP:        "Iniciar servidor HTTP",
-		SEE_NAME_TREE:       "Ver árvore indexada por nome",
-		SEE_CPF_TREE:        "Ver árvore indexada por CPF",
-		SEE_BIRTH_DATE_TREE: "Ver árvore indexada por data de nascimento",
-		SEARCH_NAME:         "Buscar por nome",
-		SEARCH_CPF:          "Buscar por CPF",
-		SEARCH_BIRTH_DATE:   "Buscar por data de nascimento",
+		SAIR:                   "Sair",
+		HABILITAR_DEBUG:        "Habiltar debug",
+		VER_ARVORE:             "Ver árvore",
+		INSERIR_VALOR:          "Inserir valor",
+		INSERIR_VALORES:        "Inserir valores",
+		VER_POST_ORDER:         "DFS Post order",
+		VER_IN_ORDER:           "DFS In order",
+		VER_PRE_ORDER:          "DFS Pre order",
+		VER_BFS:                "BFS",
+		BUSCAR_VALOR:           "Buscar valor",
+		REMOVER_VALOR:          "Remover valor",
+		INICIAR_HTTP:           "Iniciar servidor HTTP",
+		VER_ARVORE_NOMES:       "Ver árvore indexada por nome",
+		VER_ARVORE_CPF:         "Ver árvore indexada por CPF",
+		VER_ARVORE_ANIVERSARIO: "Ver árvore indexada por data de nascimento",
+		BUSCAR_NOME:            "Buscar por nome",
+		BUSCAR_CPF:             "Buscar por CPF",
+		BUSCAR_ANIVERSARIO:     "Buscar por data de nascimento",
+		GERAR_DADOS:            "Gerar novos dados",
 	}
 
 	avl.LogLevel = avl.NONE
@@ -229,28 +232,28 @@ func cmdLoop(index *avl.Index) {
 				break
 			}
 			fmt.Printf("Servidor iniciado em http://127.0.0.1:3333")
-		case SEE_NAME_TREE:
+		case VER_ARVORE_NOMES:
 			if index.Names == nil {
 				fmt.Printf("Árvore vazia\n")
 				continue
 			}
 			index.Names.PrettyPrint("")
 
-		case SEE_CPF_TREE:
+		case VER_ARVORE_CPF:
 			if index.CPF == nil {
 				fmt.Printf("Árvore vazia\n")
 				continue
 			}
 			index.CPF.PrettyPrint("")
 
-		case SEE_BIRTH_DATE_TREE:
+		case VER_ARVORE_ANIVERSARIO:
 			if index.BirthDate == nil {
 				fmt.Printf("Árvore vazia\n")
 				continue
 			}
 			index.BirthDate.PrettyPrint("")
 
-		case SEARCH_NAME:
+		case BUSCAR_NOME:
 			fmt.Printf("Digite a chave: ")
 			match := index.Names.SearchAllBy(types.String(askValue()),
 				func(k1, k2 types.String) bool { return strings.HasPrefix(string(k1), string(k2)) },
@@ -260,12 +263,12 @@ func cmdLoop(index *avl.Index) {
 				printIfExist(node)
 			}
 
-		case SEARCH_CPF:
+		case BUSCAR_CPF:
 			fmt.Printf("Digite a chave: ")
 			r := index.CPF.Search(types.String(askValue()))
 			printIfExist(r)
 
-		case SEARCH_BIRTH_DATE:
+		case BUSCAR_ANIVERSARIO:
 			fmt.Printf("Digite uma data inicial: ")
 			input := askValue()
 			start, err := time.Parse(types.DDMMYYYY, input)
@@ -297,6 +300,18 @@ func cmdLoop(index *avl.Index) {
 			for _, node := range matches {
 				printPerson(node)
 			}
+
+        case GERAR_DADOS:
+			fmt.Printf("Informe a quantidade de registros\n")
+            n := askInt()
+            data.Generate(n)
+            fmt.Printf("%d dados gerados\n", n)
+
+            //TODO: Move to common location
+            reader := &data.CsvPersonReader{}
+            people := reader.Read(data.DataPath)
+            index = avl.BuildIndexes(people)
+            fmt.Printf("%d dados indexados\n", n)
 
 		case SAIR:
 			fmt.Print("Desligando os motores")

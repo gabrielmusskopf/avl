@@ -194,19 +194,19 @@ func (n *IndexedTree[K, V]) WalkAllBy(walkFunc func(IndexedTree[K, V])) {
 
 func (n *IndexedTree[K, V]) Search(k K) *IndexedTree[K, V] {
 	var t *IndexedTree[K, V]
-	_, _ = measure(func(i *int) {
+    iter, elasped := measure(func(i *int) {
 		t = n.searchRec(k, i)
 	})
-	//fmt.Printf("buscado %v em %d interações\n", k, iter)
+	Debug("%d interações para buscar %v %dns\n", iter, k, elasped)
 	return t
 }
 
 func (n *IndexedTree[K, V]) SearchAllBy(k K, matchFunc func(K, K) bool, compareFunc func(K,K) int) []*IndexedTree[K, V] {
 	matches := make([]*IndexedTree[K, V], 0)
-	_, _ = measure(func(i *int) {
+    iter, elasped := measure(func(i *int) {
 		n.searchAllByRec(k, &matches, matchFunc, compareFunc, i)
 	})
-	//fmt.Printf("buscado %v em %d interações\n", k, iter)
+	Debug("%d interações para buscar %v %dns\n", iter, k, elasped)
 	return matches
 }
 
