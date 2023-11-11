@@ -85,6 +85,10 @@ func StringFromDate(s Date) string {
 	return time.Time(s).Format(DDMMYYYY)
 }
 
+func (d Date) ToString() string {
+	return StringFromDate(d)
+}
+
 func DateFromString(s string) Date {
 	time, err := time.Parse(DDMMYYYY, s)
 	if err != nil {

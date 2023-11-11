@@ -163,6 +163,10 @@ func printIfExist[T avl.Ordered[T]](n *avl.IndexedTree[T, *types.Person]) {
 	}
 }
 
+func matchStrig(k1, k2 types.String) bool {
+	return strings.HasPrefix(string(k1), string(k2))
+}
+
 func compareWithLength(s, other types.String) int {
 	if len(s) > len(other) {
 		s = s[:len(other)]
@@ -170,6 +174,31 @@ func compareWithLength(s, other types.String) int {
 		other = other[:len(s)]
 	}
 	return s.Compare(other)
+}
+
+func matchDate(start, end time.Time, node types.Date) bool {
+	date, err := time.Parse(types.DDMMYYYY, node.ToString())
+	if err != nil {
+		log.Fatalf("ERRO no parse de %s", node)
+	}
+	return date.After(start) && date.Before(end)
+}
+
+func compareDate(start, end time.Time, node types.Date) int {
+	date, err := time.Parse(types.DDMMYYYY, node.ToString())
+	if err != nil {
+		log.Fatalf("ERRO no parse de %s", node)
+	}
+	// if date is before time period
+	if date.Before(start) {
+		return 1
+	}
+	// if date is after time period
+	if date.After(end) {
+		return -1
+	}
+	// if date is in time period
+	return 0
 }
 
 func cmdLoop(index *avl.Index) {
@@ -255,9 +284,7 @@ func cmdLoop(index *avl.Index) {
 
 		case BUSCAR_NOME:
 			fmt.Printf("Digite a chave: ")
-			match := index.Names.SearchAllBy(types.String(askValue()),
-				func(k1, k2 types.String) bool { return strings.HasPrefix(string(k1), string(k2)) },
-				compareWithLength)
+			match := index.Names.SearchAllBy(types.String(askValue()), matchStrig, compareWithLength)
 
 			for _, node := range match {
 				printIfExist(node)
@@ -283,35 +310,32 @@ func cmdLoop(index *avl.Index) {
 				log.Fatalf("ERRO ao ler data %s\n", input)
 			}
 
-			matches := make([]*types.Person, 0)
-			index.BirthDate.WalkAllBy(func(node avl.IndexedTree[types.Date, *types.Person]) {
-				date, err := time.Parse(types.DDMMYYYY, types.StringFromDate(node.Key))
-				if err != nil {
-					log.Fatalf("ERRO no parse de %s", node.Key)
-				}
-				if date.After(start) && date.Before(end) {
-					matches = append(matches, node.Value)
-				}
-			})
-			if len(matches) == 0 {
-				fmt.Printf("\nNão existem datas no período informado\n")
+			matches := index.BirthDate.MatchAllBy(
+				func(node types.Date) bool {
+					return matchDate(start, end, node)
+				},
+				func(node types.Date) int {
+					return compareDate(start, end, node)
+				})
+
+			if len(matches) != 0 {
 				continue
 			}
 			for _, node := range matches {
-				printPerson(node)
+				printPerson(node.Value)
 			}
 
-        case GERAR_DADOS:
+		case GERAR_DADOS:
 			fmt.Printf("Informe a quantidade de registros\n")
-            n := askInt()
-            data.Generate(n)
-            fmt.Printf("%d dados gerados\n", n)
+			n := askInt()
+			data.Generate(n)
+			fmt.Println("Dados gerados")
 
-            //TODO: Move to common location
-            reader := &data.CsvPersonReader{}
-            people := reader.Read(data.DataPath)
-            index = avl.BuildIndexes(people)
-            fmt.Printf("%d dados indexados\n", n)
+			//TODO: Move to common location
+			reader := &data.CsvPersonReader{}
+			people := reader.Read(data.DataPath)
+			index = avl.BuildIndexes(people)
+			fmt.Println("Dados indexados")
 
 		case SAIR:
 			fmt.Print("Desligando os motores")

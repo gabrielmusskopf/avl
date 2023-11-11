@@ -1,3 +1,8 @@
 # bin
 bin/
+
+# fake data
+pkg/data/fake_data.csv
+
 **/__pycache__/
+
