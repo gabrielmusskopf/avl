@@ -167,7 +167,7 @@ func (n *IndexedTree[K, V]) searchRec(k K, i *int) *IndexedTree[K, V] {
 	return n.Right.searchRec(k, i)
 }
 
-func (n *IndexedTree[K, V]) searchAllByRec(k K, match *[]*IndexedTree[K, V], matchFunc func(K, K) bool, compareFunc func(K,K) int, iter *int) {
+func (n *IndexedTree[K, V]) searchAllByRec(k K, match *[]*IndexedTree[K, V], matchFunc func(K, K) bool, compareFunc func(K, K) int, iter *int) {
 	if n == nil {
 		return
 	}
@@ -183,6 +183,53 @@ func (n *IndexedTree[K, V]) searchAllByRec(k K, match *[]*IndexedTree[K, V], mat
 	}
 }
 
+// Busca todos os nós que corresponderem de acordo com as funções
+// Recebe:
+//   k            chave que é usada para comparar com o nó em matchFunc
+//   matchFunc    recebe a key do nó e retorna flag indicando se deve ser selecionado
+//   compareFunc  recebe a key do nó e retorna 
+//                -1 ou 0 para buscar na subárvore esquerda, ou
+//                1 ou 0 para buscar na subárvore direita
+func (n *IndexedTree[K, V]) SearchAllBy(k K, matchFunc func(K, K) bool, compareFunc func(K, K) int) []*IndexedTree[K, V] {
+	matches := make([]*IndexedTree[K, V], 0)
+	iter, elasped := measure(func(i *int) {
+		n.searchAllByRec(k, &matches, matchFunc, compareFunc, i)
+	})
+	Debug("%d interações para buscar %v %dns\n", iter, k, elasped)
+	return matches
+}
+
+func (n *IndexedTree[K, V]) matchAllByRec(match *[]*IndexedTree[K, V], matchFunc func(K) bool, compareFunc func(K) int, iter *int) {
+	if n == nil {
+		return
+	}
+	*iter++
+	if matchFunc(n.Key) {
+		*match = append(*match, n)
+	}
+	if compareFunc(n.Key) == -1 || compareFunc(n.Key) == 0 {
+		n.Left.matchAllByRec(match, matchFunc, compareFunc, iter)
+	}
+	if compareFunc(n.Key) == 1 || compareFunc(n.Key) == 0 {
+		n.Right.matchAllByRec(match, matchFunc, compareFunc, iter)
+	}
+}
+
+// Busca todos os nós que corresponderem de acordo com as funções
+// matchFunc    recebe a key do nó e retorna flag indicando se deve ser selecionado
+// compareFunc  recebe a key do nó e retorna 
+//              -1 ou 0 para buscar na subárvore esquerda, ou
+//              1 ou 0 para buscar na subárvore direita
+func (n *IndexedTree[K, V]) MatchAllBy(matchFunc func(K) bool, compareFunc func(K) int) []*IndexedTree[K, V] {
+	matches := make([]*IndexedTree[K, V], 0)
+	iter, elasped := measure(func(i *int) {
+		n.matchAllByRec(&matches, matchFunc, compareFunc, i)
+	})
+	Debug("%d interações para buscar %dns\n", iter, elasped)
+	return matches
+}
+
+// Percorre todos os nós da árvore aplicando a walkFunc. Uso não é indicado pois tem tempo linear
 func (n *IndexedTree[K, V]) WalkAllBy(walkFunc func(IndexedTree[K, V])) {
 	if n == nil {
 		return
@@ -192,22 +239,14 @@ func (n *IndexedTree[K, V]) WalkAllBy(walkFunc func(IndexedTree[K, V])) {
 	n.Right.WalkAllBy(walkFunc)
 }
 
+// Busca nó com chave idência a informada
 func (n *IndexedTree[K, V]) Search(k K) *IndexedTree[K, V] {
 	var t *IndexedTree[K, V]
-    iter, elasped := measure(func(i *int) {
+	iter, elasped := measure(func(i *int) {
 		t = n.searchRec(k, i)
 	})
 	Debug("%d interações para buscar %v %dns\n", iter, k, elasped)
 	return t
-}
-
-func (n *IndexedTree[K, V]) SearchAllBy(k K, matchFunc func(K, K) bool, compareFunc func(K,K) int) []*IndexedTree[K, V] {
-	matches := make([]*IndexedTree[K, V], 0)
-    iter, elasped := measure(func(i *int) {
-		n.searchAllByRec(k, &matches, matchFunc, compareFunc, i)
-	})
-	Debug("%d interações para buscar %v %dns\n", iter, k, elasped)
-	return matches
 }
 
 // FB(p) = h(sae(p)) - h(sad(p))
