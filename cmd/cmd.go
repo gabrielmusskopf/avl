@@ -318,7 +318,7 @@ func cmdLoop(index *avl.Index) {
 					return compareDate(start, end, node)
 				})
 
-			if len(matches) != 0 {
+			if len(matches) == 0 {
 				continue
 			}
 			for _, node := range matches {
